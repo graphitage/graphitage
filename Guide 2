@@ -55,7 +55,7 @@ Common features of papers are shown below:
 	6- Related works
 
 CRUD Operations for a paper:
-	1- Inser operation is performed by using features defined above.
+	1- Insert operation is performed by using features defined above.
 	2- Try to prevent redundant data for common features.
 	3- A paper can be added without entering all features. 
 	4- A paper entered before can be updated and deleted.
@@ -78,21 +78,3 @@ Search:
 		* isEqual and isContain can be used for string values
 		* greaterThan and lessThan operations can be used for numeric values
 		* User can choose more than one criteria at the same time, and  also, user can decide AND or OR clauses to connect conditions.
-
-
-
-Backend - 4 + ~1
-	1- Class'ların tasarlanması (1,5D) * Tüm ekip
-	2- Login ve Sign In kısımlarının yapılması (1,5D) * 1 kişi
-	2- Graph için CRUD işlemelerinin yapılabilmesi (10D) * 2 kişi
-	3- Search ortamının tasarlanması (10D) * 2 kişi
-Frontend - 2
-	1- Login ve Sign In ekranlarının tasarlanması (3D) * 1 kişi
-	2- Graph'ın görselleşitirilmesi (7D) * 1 kişi
-	3- Graph'ın extend edilebilmesi (5D) * 1 kişi
-	4- Graph üzerinde arama yapılabilmesi (10D) * 1 kişi
-DevOps - 1
-	1- Docker'ın öğrenilmesi
-	2- Neo4J container'nın ayağa kaldırılması, docker-compose file'ının yazılması
-	3- Örnek verilerin eklenmesi
-	4- Backend ve frontend kodları için Dockerfile'ların hazırlanması
