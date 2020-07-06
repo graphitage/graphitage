@@ -1,0 +1,71 @@
+Phase1
+--------
+Deliverables
+- Show graph (default: only paper nodes with titles and relations between paper nodes)
+- Show node info
+- Simple expand: show all relations for a node
+- Custom expand: select which properties/relations of the graph to show
+- Custom filter: select for which properties/relations to filter the graph
+Hints:
+- Determine all required operations on the graph
+- Sketch the story board for UI
+- Define the basic use-cases/flows
+- Decide on the interfaces (between and within components)
+- Design the arhitecture and APIs
+UI:
+- UI flow + Story board
+- Graph Visualization
+- Search/Basic components
+Backend:
+- Graph query generator
+Design:
+- How to reprsent the graph?
+  -> What a node/edge/property means?
+  -> What relations to have? (Between which nodes?)
+- How will we benefit from the knowledge graph?
+  -> What type of searches/visualizations will we have?
+  -> What benefit will they carry?
+- What are the main components?
+- How will the components communicate?
+- How should be the interfaces?
+- Will there be any async calls?
+Demo:
+- Presentation
+- Video
+Documentation:
+- Github pages
+- API
+Deployment
+- Docker
+All -> Design, documentation, demo
+UI -> Muhammed, Bilge, Güneş, Sametcan
+Backend -> Onur, Akif, Melih
+Deployment -> Sametcan, Melih
+Video -> Sametcan, Melih
+Tips:
+- Java Springboot
+- Swagger
+- Neo4j
+- Cytoscape
+- React
+- Docker
+To image the graph, see (1:50):
+https://www.youtube.com/watch?v=NQO3HdhahKQ
+Though, use your own imagination
+For video design & PR, see:
+https://www.youtube.com/watch?v=RpF21VuUxXg
+Also check for basic components:
+https://github.com/odayibas/astair
+-------------------------------------------------------------------
+Phase2
+--------
+- Text Extraction (OCR)
+- Document Indexing
+- Document Embedding
+- Document Clustering
+- Document Comparison
+Tips:
+- Apache Tika
+- Elasticsearch
+- https://paperswithcode.com/task/document-embedding
+- https://github.com/spotify/annoy

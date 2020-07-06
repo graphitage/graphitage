@@ -1,0 +1,98 @@
+A lot of papers are read everyday by a number of researchers. 
+	However, how much of this knowledge is permanent for us?
+	Alright, can we transfer our know-how obtained from papers to our teammates? 
+
+Graphitage is proposed as a solution for two questions mentioned above. Researchers extract noticeable points from papers and add these points to a knowledge graph so obtained information will become permanent, sharable and searchable.
+
+Following features are collected from a paper:
+	1- Title
+	2- ID of paper ( DOI and ArxivID can be used for journal, Arxiv publications, respectively) (There is no specific ID for conference publication, it will be considered)
+	3- Type of ID
+	4- Publish date
+	5- Keywords* 
+	6- Abstract
+	7- Targets
+	8- Problems
+	9- Summaries
+	10- Components
+	11- Application domains
+	12- Highlights
+	13- Contributions
+	14- Pros
+	15- Cons
+	16- Future Work
+	17- Evaluation metrics
+	18- Libraries
+			a) Name
+			b) Link
+	19- Related works
+			a) Title
+			b) Paper Id id
+			c) Comments
+	20- Reader
+	21- Datasets
+		- id
+		- preprocesses (list of string)
+		- Detail 
+			- id
+			- Name of dataset
+			- additional info
+			- Size info
+				- type (string)
+				- size (string)
+	22- Link of papers
+	23- Authors
+	24- Constraints
+	25- Notes
+	26- Comments
+
+Common features of papers are shown below:
+	1- Datasets
+	2- Libraries
+	3- Reader
+	4- Evaluation metrics
+	5- Keywords
+	6- Related works
+
+CRUD Operations for a paper:
+	1- Inser operation is performed by using features defined above.
+	2- Try to prevent redundant data for common features.
+	3- A paper can be added without entering all features. 
+	4- A paper entered before can be updated and deleted.
+	5- If some features can be gathered from google scholar and paper with codes, they should be used.
+
+Visualization:
+	Show all papers as nodes with their title . If there is a relation between two papers, connect these nodes with an edge. (note: only related works are considered as a relation in the first visualization screen.)
+	Expand node with simple and custom mode.In simple expand operation, predefined properties and relations will be shown. In custom expand operation, users can decide which properties and relations that are shown.
+
+	
+Search:
+	Search operation is key feature for Graphitage. Search criteria are as follows:
+		1- Title (contains or equal)
+		2- Publish date
+		3- Keywords 
+		4- Dataset name
+		5- Reader
+		6- Library name
+		
+		* isEqual and isContain can be used for string values
+		* greaterThan and lessThan operations can be used for numeric values
+		* User can choose more than one criteria at the same time, and  also, user can decide AND or OR clauses to connect conditions.
+
+
+
+Backend - 4 + ~1
+	1- Class'ların tasarlanması (1,5D) * Tüm ekip
+	2- Login ve Sign In kısımlarının yapılması (1,5D) * 1 kişi
+	2- Graph için CRUD işlemelerinin yapılabilmesi (10D) * 2 kişi
+	3- Search ortamının tasarlanması (10D) * 2 kişi
+Frontend - 2
+	1- Login ve Sign In ekranlarının tasarlanması (3D) * 1 kişi
+	2- Graph'ın görselleşitirilmesi (7D) * 1 kişi
+	3- Graph'ın extend edilebilmesi (5D) * 1 kişi
+	4- Graph üzerinde arama yapılabilmesi (10D) * 1 kişi
+DevOps - 1
+	1- Docker'ın öğrenilmesi
+	2- Neo4J container'nın ayağa kaldırılması, docker-compose file'ının yazılması
+	3- Örnek verilerin eklenmesi
+	4- Backend ve frontend kodları için Dockerfile'ların hazırlanması
