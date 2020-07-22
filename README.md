@@ -1,4 +1,4 @@
-# graphitage
+# Graphitage
 
 Today, within this surplus of information, it is very easy to get lost and 
 lose time and already gathered information. 
