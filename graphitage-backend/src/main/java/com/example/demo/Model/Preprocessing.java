@@ -15,6 +15,7 @@ public class Preprocessing {
 
     @Id
     @GeneratedValue
+    @JsonProperty(value = "preprocessingId", access = JsonProperty.Access.READ_ONLY)
     private Long id;
 
     @Getter @Setter
