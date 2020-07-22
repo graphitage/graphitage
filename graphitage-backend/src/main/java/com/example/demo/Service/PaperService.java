@@ -3,6 +3,7 @@ package com.example.demo.Service;
 
 import com.example.demo.Model.*;
 import com.example.demo.Repository.PaperRepository;
+import com.example.demo.Repository.PreprocessingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -16,7 +17,7 @@ public class PaperService {
     private final PaperRepository paperRepository;
 
     @Autowired
-    public PaperService(@Qualifier("paperDAO") PaperRepository paperRepository) {
+    public PaperService(@Qualifier("paperDAO") PaperRepository paperRepository ) {
         this.paperRepository = paperRepository;
     }
 
@@ -165,14 +166,4 @@ public class PaperService {
         return paperList;
     }
 
-//    public List<String> getPreprocessingSteps(Long preprocessingId) {
-//        Optional<Preprocessing> paperPreprocessing = paperRepository.getPreprocessing(preprocessingId);
-//        if(paperPreprocessing.isPresent()){
-//            return paperPreprocessing.get().getPreprocessingSteps();
-//        }
-//        else{
-//            return new ArrayList<>();
-//        }
-//
-//    }
 }
