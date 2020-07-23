@@ -21,7 +21,7 @@ const rootReducer = combineReducers({
 })
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
+App.listen(PORT, () => {
     console.log(`Our app is running on port ${ PORT }`);
 });
 
