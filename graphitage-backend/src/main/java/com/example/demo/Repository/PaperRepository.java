@@ -54,7 +54,7 @@ public interface PaperRepository extends Neo4jRepository<Paper, String>{
     @Query("MATCH (p:Paper)-[r:HAS_READER]->(n) WHERE n.readerName = $0 return p")
     List<Paper> paperSearchWithReaderName(String readerName);
 
-    @Query("MATCH (p:Paper)-[r:HAS_DATASET]->(n) WHERE n.datasetName = $0 return p")
+    @Query("MATCH (p:Paper)-[r:PREPROCESSING]->(n) WHERE n.datasetName = $0 return p")
     List<Paper> paperSearchWithDatasetName(String datasetName);
 
     @Query("MATCH (p:Paper)-[r:HAS_LIBRARY]->(n) WHERE n.libraryName = $0 return p")
