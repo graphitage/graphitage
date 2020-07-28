@@ -60,8 +60,16 @@ public class PaperController {
     }
 
     @PostMapping
-    public void addPaper(@RequestBody Paper paper) {
-        paperService.addPaper(paper);
+    public void addPaper(@RequestBody Paper newPaper) {
+        boolean isExists = paperService.existsPaperById(newPaper.getPaperId());
+        if ( !isExists )
+        {
+            paperService.savePaper(newPaper);
+        }
+        else
+        {
+            paperService.updatePaper(newPaper);
+        }
     }
 
     @DeleteMapping(path = "{paperId}")
@@ -69,9 +77,17 @@ public class PaperController {
         paperService.deletePaper(paperId);
     }
 
-    @PutMapping(path = "{paperId}")
-    public void updatePaper(@PathVariable("paperId") String paperId, @RequestBody Paper updatedPaper) {
-        paperService.updatePaper(paperId, updatedPaper);
+    @PutMapping
+    public void updatePaper(@RequestBody Paper updatedPaper) {
+        boolean isExists = paperService.existsPaperById(updatedPaper.getPaperId());
+        if ( !isExists )
+        {
+            paperService.savePaper(updatedPaper);
+        }
+        else
+        {
+            paperService.updatePaper(updatedPaper);
+        }
     }
 
     @GetMapping(path = "searchWithAND")
