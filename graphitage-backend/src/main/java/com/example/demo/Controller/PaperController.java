@@ -92,15 +92,17 @@ public class PaperController {
     }
 
     @GetMapping(path = "searchWithAND")
-    public List<Paper> paperSearchWithAND(@RequestParam("title") Optional<String> title, @RequestParam("dataset") Optional<String> dataset, @RequestParam("library") Optional<String> libraryName, @RequestParam("publishDate") Optional<String> publishDate, @RequestParam("readerName") Optional<String> readerName, @RequestParam("keyword") Optional<String> keyword) {
-        List<Paper> papers = paperService.paperSearchWithAND(title, publishDate, readerName, keyword, dataset, libraryName);
-        return papers;
+    public List<Paper> paperSearchWithAND(@RequestParam("title") Optional<List<String>> title, @RequestParam("dataset") Optional<List<String>> dataset,
+                                          @RequestParam("library") Optional<List<String>> libraryName, @RequestParam("publishDate") Optional<List<String>> publishDate,
+                                          @RequestParam("readerName") Optional<List<String>> readerName, @RequestParam("keyword") Optional<List<String>> keyword) {
+        return paperService.paperSearchWithAND(title, publishDate, readerName, keyword, dataset, libraryName);
     }
 
     @GetMapping(path = "searchWithOR")
-    public List<Paper> paperSearchWithOR(@RequestParam("title") Optional<String> title, @RequestParam("dataset") Optional<String> dataset, @RequestParam("library") Optional<String> libraryName, @RequestParam("publishDate") Optional<String> publishDate, @RequestParam("readerName") Optional<String> readerName, @RequestParam("keyword") Optional<String> keyword) {
-        List<Paper> papers = paperService.paperSearchWithOR(title, publishDate, readerName, keyword, dataset, libraryName);
-        return papers;
+    public List<Paper> paperSearchWithOR(@RequestParam("title") Optional<List<String>> title, @RequestParam("dataset") Optional<List<String>> dataset,
+                                         @RequestParam("library") Optional<List<String>> libraryName, @RequestParam("publishDate") Optional<List<String>> publishDate,
+                                         @RequestParam("readerName") Optional<List<String>> readerName, @RequestParam("keyword") Optional<List<String>> keyword) {
+        return paperService.paperSearchWithOR(title, publishDate, readerName, keyword, dataset, libraryName);
     }
 
     @GetMapping("{paperId}/relatedPaperWithKeyword")

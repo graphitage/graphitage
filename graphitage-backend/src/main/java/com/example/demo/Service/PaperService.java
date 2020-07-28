@@ -245,63 +245,91 @@ public class PaperService {
         return paperRepository.getRelatedWorksByID(paperId);
     }
 
-    public List<Paper> paperSearchWithAND(Optional<String> title, Optional<String> publishDate, Optional<String> readerName,
-                                          Optional<String> keyword, Optional<String> datasetName, Optional<String> libraryName) {
+    public List<Paper> paperSearchWithAND(Optional<List<String>> titles, Optional<List<String>> publishDates, Optional<List<String>> readerNames,
+                                          Optional<List<String>> keywords, Optional<List<String>> datasetNames, Optional<List<String>> libraryNames) {
 
         List<Paper> resultList = new ArrayList<>();
-        if (title.isPresent()) {
-            resultList = paperRepository.paperSearchWithTitle(title.get());
+        if (titles.isPresent()) {
+            for (String title : titles.get()) {
+                List<Paper> tempList = paperRepository.paperSearchWithTitle(title);
+                paperIntersection(resultList, tempList);
+            }
         }
-        if (publishDate.isPresent()) {
-            List<Paper> tempList = paperRepository.paperSearchWithPublishDate(publishDate.get());
-            paperIntersection(resultList, tempList);
+        if (publishDates.isPresent()) {
+            for (String publishDate : publishDates.get()) {
+                List<Paper> tempList = paperRepository.paperSearchWithPublishDate(publishDate);
+                paperIntersection(resultList, tempList);
+            }
         }
-        if (readerName.isPresent()) {
-            List<Paper> tempList = paperRepository.paperSearchWithReaderName(readerName.get());
-            paperIntersection(resultList, tempList);
+        if (readerNames.isPresent()) {
+            for (String readerName : readerNames.get()) {
+                List<Paper> tempList = paperRepository.paperSearchWithReaderName(readerName);
+                paperIntersection(resultList, tempList);
+            }
         }
-        if (keyword.isPresent()) {
-            List<Paper> tempList = paperRepository.paperSearchWithKeyword(keyword.get());
-            paperIntersection(resultList, tempList);
+        if (keywords.isPresent()) {
+            for (String keyword : keywords.get()) {
+                List<Paper> tempList = paperRepository.paperSearchWithKeyword(keyword);
+                paperIntersection(resultList, tempList);
+            }
         }
-        if (datasetName.isPresent()) {
-            List<Paper> tempList = paperRepository.paperSearchWithDatasetName(datasetName.get());
-            paperIntersection(resultList, tempList);
+        if (datasetNames.isPresent()) {
+            for (String datasetName : datasetNames.get()) {
+                List<Paper> tempList = paperRepository.paperSearchWithDatasetName(datasetName);
+                paperIntersection(resultList, tempList);
+            }
         }
-        if (libraryName.isPresent()) {
-            List<Paper> tempList = paperRepository.paperSearchWithLibraryName(libraryName.get());
-            paperIntersection(resultList, tempList);
+        if (libraryNames.isPresent()) {
+            for (String libraryName : libraryNames.get()) {
+                List<Paper> tempList = paperRepository.paperSearchWithLibraryName(libraryName);
+                paperIntersection(resultList, tempList);
+            }
+
         }
 
         return resultList;
     }
 
-    public List<Paper> paperSearchWithOR(Optional<String> title, Optional<String> publishDate, Optional<String> readerName,
-                                         Optional<String> keyword, Optional<String> datasetName, Optional<String> libraryName) {
+    public List<Paper> paperSearchWithOR(Optional<List<String>> titles, Optional<List<String>> publishDates, Optional<List<String>> readerNames,
+                                         Optional<List<String>> keywords, Optional<List<String>> datasetNames, Optional<List<String>> libraryNames) {
 
         List<Paper> resultList = new ArrayList<>();
-        if (title.isPresent()) {
-            resultList = paperRepository.paperSearchWithTitle(title.get());
+        if (titles.isPresent()) {
+            for (String title : titles.get()) {
+                List<Paper> tempList = paperRepository.paperSearchWithTitle(title);
+                resultList = paperUnion(resultList, tempList);
+            }
         }
-        if (publishDate.isPresent()) {
-            List<Paper> tempList = paperRepository.paperSearchWithPublishDate(publishDate.get());
-            resultList = paperUnion(resultList, tempList);
+        if (publishDates.isPresent()) {
+            for (String publishDate : publishDates.get()) {
+                List<Paper> tempList = paperRepository.paperSearchWithPublishDate(publishDate);
+                resultList = paperUnion(resultList, tempList);
+            }
         }
-        if (readerName.isPresent()) {
-            List<Paper> tempList = paperRepository.paperSearchWithReaderName(readerName.get());
-            resultList = paperUnion(resultList, tempList);
+        if (readerNames.isPresent()) {
+            for (String readerName : readerNames.get()) {
+                List<Paper> tempList = paperRepository.paperSearchWithReaderName(readerName);
+                resultList = paperUnion(resultList, tempList);
+            }
         }
-        if (keyword.isPresent()) {
-            List<Paper> tempList = paperRepository.paperSearchWithKeyword(keyword.get());
-            resultList = paperUnion(resultList, tempList);
+        if (keywords.isPresent()) {
+            for (String keyword : keywords.get()) {
+                List<Paper> tempList = paperRepository.paperSearchWithKeyword(keyword);
+                resultList = paperUnion(resultList, tempList);
+            }
         }
-        if (datasetName.isPresent()) {
-            List<Paper> tempList = paperRepository.paperSearchWithDatasetName(datasetName.get());
-            resultList = paperUnion(resultList, tempList);
+        if (datasetNames.isPresent()) {
+            for (String datasetName : datasetNames.get()) {
+                List<Paper> tempList = paperRepository.paperSearchWithDatasetName(datasetName);
+                resultList = paperUnion(resultList, tempList);
+            }
+
         }
-        if (libraryName.isPresent()) {
-            List<Paper> tempList = paperRepository.paperSearchWithLibraryName(libraryName.get());
-            resultList = paperUnion(resultList, tempList);
+        if (libraryNames.isPresent()) {
+            for (String libraryName : libraryNames.get()) {
+                List<Paper> tempList = paperRepository.paperSearchWithLibraryName(libraryName);
+                resultList = paperUnion(resultList, tempList);
+            }
         }
 
         return resultList;
