@@ -32,8 +32,8 @@ public class LibraryController {
         return libraryService.getPapersByLibraryId(libraryId);
     }
 
-    @DeleteMapping
-    public void deleteLibraryById(Long libraryId){
+    @DeleteMapping(path = "{libraryId}")
+    public void deleteLibraryById(@PathVariable("libraryId") Long libraryId){
         libraryService.deleteLibraryById(libraryId);
 
     }

@@ -34,7 +34,7 @@ public interface PaperRepository extends Neo4jRepository<Paper, String>{
     @Query("MATCH (p:Paper) WHERE p.paperId = $0 RETURN p.keywords")
     List<String> findKeywordsById(String paperId);
 
-    @Query("MATCH (p:Paper)-[r:HAS_DATASET]-(n) WHERE p.paperId = $0 RETURN n")
+    @Query("MATCH (p:Paper)-[r:PREPROCESSING]-(n) WHERE p.paperId = $0 RETURN n")
     List<Dataset> findDatasetsById(String paperId);
 
     @Query("MATCH (p:Paper)-[r:HAS_LIBRARY]-(n) WHERE p.paperId = $0 RETURN n")
@@ -66,6 +66,4 @@ public interface PaperRepository extends Neo4jRepository<Paper, String>{
 
     @Query("MATCH (p:Paper)-[r:HAS_LIBRARY]->(n) WHERE n.libraryName = $0 return p")
     List<Paper> paperSearchWithLibraryName(String libraryName);
-
-
 }

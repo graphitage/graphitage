@@ -34,8 +34,8 @@ public class DatasetController {
         return datasetService.getPapersByDatasetId(datasetId);
     }
 
-    @DeleteMapping
-    public void deleteDatasetById(Long datasetId){
+    @DeleteMapping(path = "{datasetId}")
+    public void deleteDatasetById(@PathVariable("datasetId") Long datasetId){
         datasetService.deleteDatasetById(datasetId);
     }
 }
