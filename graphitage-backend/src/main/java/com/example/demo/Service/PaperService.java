@@ -6,10 +6,19 @@ import com.example.demo.Repository.LibraryRepository;
 import com.example.demo.Repository.PaperRepository;
 import com.example.demo.Repository.PreprocessingRepository;
 import com.example.demo.Repository.ReaderRepository;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 
@@ -165,7 +174,7 @@ public class PaperService {
     /*
      * The relationship between paper and library is broken.
      * But the library is not deleted from the database, only the relationship is deleted.
-    */
+     */
     public void cleanLibraryList(Paper paper) {
         List<Library> libraryList = paper.getLibraries();
 
@@ -350,4 +359,108 @@ public class PaperService {
         return paperList;
     }
 
+    public Paper getPaperInfoUsingSemanticAPI(String paperIdType, String paperId) throws IOException, ParseException {
+
+        String baseAddress = "https://api.semanticscholar.org/v1/paper/";
+        String address = "";
+
+        // Control given id type and generate request url with respect to given ID type
+        if (paperIdType.equalsIgnoreCase("doi") || paperIdType.equalsIgnoreCase("s2")) {
+            address = baseAddress + paperId;
+        } else {
+            address = baseAddress + paperIdType + ":" + paperId;
+        }
+
+        // Send request to semantic api and get response
+        URL urlForGetRequest = new URL(address);
+        String readLine = null;
+        HttpURLConnection connection = (HttpURLConnection) urlForGetRequest.openConnection();
+        connection.setRequestMethod("GET");
+        int responseCode = connection.getResponseCode();
+        StringBuilder response = new StringBuilder();
+
+        if (responseCode == HttpURLConnection.HTTP_OK) {
+            BufferedReader in = null;
+            in = new BufferedReader(
+                    new InputStreamReader(connection.getInputStream()));
+            while ((readLine = in.readLine()) != null) {
+                response.append(readLine);
+            }
+            in.close();
+
+        } else {
+            return new Paper();
+        }
+
+        // Parse returned response to JSONObject
+        JSONObject paperJson = new JSONObject(response.toString());
+        JSONObject tempJson;
+
+
+        // Get paper's id, abstract and url
+        String title = (String) paperJson.get("title");
+        String abstractOfJ = (String) paperJson.get("abstract");
+        String url = (String) paperJson.get("url");
+
+        Date date = null;
+        if(!paperJson.isNull("year")){
+            String year = String.valueOf(paperJson.get("year"));
+            date = new SimpleDateFormat("yyyy").parse(year);
+        }
+
+
+        //List<String> authors=new ArrayList<>();
+        JSONArray authorsJ = (JSONArray) paperJson.get("authors");
+        StringBuilder authors = new StringBuilder();
+        for (int i = 0; i < authorsJ.length(); i++) {
+            tempJson = (JSONObject) authorsJ.get(i);
+            //authors.add((String)jo.get("name"));
+            authors.append((String) tempJson.get("name")).append(",");
+        }
+
+        // Use fieldOfStudy and topics as keywords of the paper
+        List<String> keywords = new ArrayList<>();
+        JSONArray fieldsOfStudy = (JSONArray) paperJson.get("fieldsOfStudy");
+        for (int i = 0; i < fieldsOfStudy.length(); i++) {
+            keywords.add((String) fieldsOfStudy.get(i));
+        }
+        JSONArray topicJ = (JSONArray) paperJson.get("topics");
+        for (int i = 0; i < topicJ.length(); i++) {
+            tempJson = (JSONObject) topicJ.get(i);
+            keywords.add((String) tempJson.get("topic"));
+        }
+
+        // Get related works
+        String referencesId = "", referencesType = "";
+        JSONArray referencesJ = (JSONArray) paperJson.get("references");
+        List<Paper> references = new ArrayList<>();
+        for (int i = 0; i < referencesJ.length(); i++) {
+            tempJson = (JSONObject) referencesJ.get(i);
+
+            if (!tempJson.isNull("doi")) {
+                referencesType = "DOI";
+                referencesId = (String) tempJson.get("doi");
+            } else if (!tempJson.isNull("arxivId")) {
+                referencesType = "arXiv";
+                referencesId = (String) tempJson.get("arXiv");
+            } else {
+                referencesType = "S2";
+                referencesId = (String) tempJson.get("paperId");
+            }
+            references.add(new Paper(referencesId, referencesType, (String) tempJson.get("title")));
+        }
+
+        if (!paperJson.isNull("doi")) {
+            paperIdType = "DOI";
+            paperId = (String) paperJson.get("doi");
+        } else if (!paperJson.isNull("arxivId")) {
+            paperIdType = "arXiv";
+            paperId = (String) paperJson.get("arXiv");
+        }
+
+        Paper paper = new Paper(paperId, paperIdType, authors.toString(), keywords, title, abstractOfJ, url, date);
+        paper.setRelatedWorks(references);
+        return paper;
+
+    }
 }
