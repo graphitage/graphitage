@@ -20,6 +20,7 @@ public class Library {
 
     @Id
     @GeneratedValue
+    @Setter
     @Getter
     @Property("id")
     @JsonProperty(value = "id", access = JsonProperty.Access.READ_ONLY)
