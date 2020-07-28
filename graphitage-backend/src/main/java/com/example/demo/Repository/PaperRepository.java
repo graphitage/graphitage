@@ -19,9 +19,17 @@ public interface PaperRepository extends Neo4jRepository<Paper, String>{
 
     Optional<Paper> findById(String paperID);
 
+    boolean existsById(String paperId);
+
     Paper save(Paper paper); // it adds a paper to database
 
     void deleteById(String paperId);
+
+    @Query("MATCH (p:Paper)-[r:HAS_LIBRARY]->(n:Library) WHERE p.paperId = $0 AND ID(n) = $1 delete r")
+    void deleteLibraryRelationship(String paperId, Long libraryId);
+
+    @Query("MATCH (p:Paper)-[r:HAS_READER]->(n:Reader) WHERE p.paperId = $0 AND ID(n) = $1 delete r")
+    void deleteReaderRelationship(String paperId, Long readerId);
 
     @Query("MATCH (p:Paper) WHERE p.paperId = $0 RETURN p.keywords")
     List<String> findKeywordsById(String paperId);
@@ -40,7 +48,6 @@ public interface PaperRepository extends Neo4jRepository<Paper, String>{
 
     @Query("MATCH (p:Paper)-[r:RELATED_WITH]-(n) WHERE p.keywords n.keywords RETURN n")
     List<Paper> getRelatedPapersByKeyword(String paperId);
-
 
     @Query("MATCH (p:Paper) WHERE toLower(p.title) CONTAINS toLower($0) return p")
     List<Paper> paperSearchWithTitle(String title);

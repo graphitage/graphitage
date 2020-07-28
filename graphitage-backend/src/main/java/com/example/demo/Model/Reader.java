@@ -17,6 +17,7 @@ public class Reader {
 
     @Id
     @GeneratedValue
+    @Setter
     @Getter
     @Property("id")
     @JsonProperty(value = "id", access = JsonProperty.Access.READ_ONLY)
@@ -37,4 +38,5 @@ public class Reader {
     public Reader(String readerName) {
         this.readerName = readerName;
     }
+
 }

@@ -14,4 +14,10 @@ public interface PreprocessingRepository extends Neo4jRepository<Preprocessing, 
 
     @Override
     Iterable<Preprocessing> findAll();
+
+    @Override
+    void delete(Preprocessing preprocessing);
+
+    @Override
+    void deleteById(Long aLong);
 }
