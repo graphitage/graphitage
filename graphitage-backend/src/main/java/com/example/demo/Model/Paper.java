@@ -126,7 +126,7 @@ public class Paper extends PaperDetails implements Comparable<Paper> {
     */
     public void merge(Paper updatePaper, List<String> withoutProperties) {
 
-        Method methods[] = Paper.class.getMethods();
+        Method[] methods = Paper.class.getMethods();
         /* All methods of the class have been traversed. */
         for (Method method : methods) {
 
@@ -145,7 +145,7 @@ public class Paper extends PaperDetails implements Comparable<Paper> {
 
                     try {
                         /* The setter and receiver functions of the feature have been gotten. */
-                        Method getterMethod = Paper.class.getMethod(getterMethodName, (Class<?>) null);
+                        Method getterMethod = Paper.class.getMethod(getterMethodName, (Class<?>[]) null);
                         Method setterMethod = Paper.class.getMethod(setterMethodName, method.getReturnType());
 
                         /* If the feature to be updated is not null, the updating was performed with the setter function. */
