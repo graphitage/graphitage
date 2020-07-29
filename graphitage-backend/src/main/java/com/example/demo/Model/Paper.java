@@ -54,6 +54,7 @@ public class Paper extends PaperDetails implements Comparable<Paper> {
     @JsonIgnoreProperties({"papers"})
     private List<Library> libraries = new ArrayList<>();
 
+    @Setter
     @JsonProperty(value = "relatedWorks")
     @Relationship(type = "RELATED_WITH")
     @JsonIgnoreProperties({"relatedWorks"})
@@ -80,6 +81,24 @@ public class Paper extends PaperDetails implements Comparable<Paper> {
         this.keywords = keywords;
         this.linkOfPaper = linkOfPaper;
         this.authors = authors;
+    }
+
+    public Paper(String paperId, String paperIdType, String authors, List<String> keywords,
+                 String title,String abstractOfPaper, String linkOfPaper, Date publishDate){//semantic icin
+        super.setAbstractOfPaper(abstractOfPaper);
+        this.paperId = paperId;
+        this.paperIdType = paperIdType;
+        this.title = title;
+        this.keywords = keywords;
+        this.authors = authors;
+        this.linkOfPaper=linkOfPaper;
+        this.publishDate = publishDate;
+    }
+
+    public Paper(String paperId, String paperIdType, String title){//semantic referans icin
+        this.paperId = paperId;
+        this.paperIdType = paperIdType;
+        this.title = title;
     }
 
     @Override

@@ -8,6 +8,8 @@ import com.example.demo.Service.PaperService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+import java.text.ParseException;
 import java.util.List;
 import java.util.Optional;
 
@@ -108,6 +110,11 @@ public class PaperController {
     @GetMapping("{paperId}/relatedPaperWithKeyword")
     public List<Paper> getRelatedPapersWithKeyword(String paperId){
         return paperService.getRelatedPapersWithKeyword(paperId);
+    }
+
+    @GetMapping("semantic_api/{paperIdType}:{paperId}")
+    public Paper getPaperUsingSemanticAPI(@RequestParam("paperIdType") String paperIdType, @RequestParam("paperId")String paperId) throws IOException, ParseException {
+        return paperService.getPaperInfoUsingSemanticAPI(paperIdType, paperId);
     }
 
 }
