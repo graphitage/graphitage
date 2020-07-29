@@ -90,33 +90,64 @@ public class PaperService {
         Paper oldPaper = paper.get();
 
         /*
+         * The properties that will not be updated with setter and getter functions are determined..
+         * Since library, reader, dataset and relatedWork lists are kept in nodes, they are not updated with setter and getter functions.
+         * Relations should be deleted and new relationships should be created.
+        */
+        List<String> withoutProperties = new ArrayList<>();
+        withoutProperties.add("Libraries");
+        withoutProperties.add("Readers");
+        withoutProperties.add("Datasets");
+        withoutProperties.add("RelatedWorks");
+        withoutProperties.add("Class");
+
+        /* The non-null properties of the new Paper are updated on the old paper. */
+        oldPaper.merge(newPaper, withoutProperties);
+
+        /*
+         * Updating the relatedWork list.
+         * If the newly added paper has a relatedWork list, the relatedWork list of the paper with the same id is cleared.
+         * The new relatedWork list is set.
+         */
+        if ( newPaper.getRelatedWorks() != null && newPaper.getRelatedWorks().size() > 0 ) {
+            cleanRelatedWorkList(oldPaper);
+            oldPaper.setRelatedWorks(newPaper.getRelatedWorks());
+        }
+
+        /*
+         * Updating the library list.
          * If the newly added paper has a library list, the library list of the paper with the same id is cleared.
          * The new library list is initialized.
          */
         if (newPaper.getLibraries() != null && newPaper.getLibraries().size() > 0) {
             cleanLibraryList(oldPaper);
-            initLibraryList(newPaper);
+            oldPaper.setLibraries(newPaper.getLibraries());
+            initLibraryList(oldPaper);
         }
 
         /*
+         * Updating the reader list.
          * If the newly added paper has a reader list, the reader list of the paper with the same id is cleared.
          * The new reader list is initialized.
          */
         if (newPaper.getReaders() != null && newPaper.getReaders().size() > 0) {
             cleanReaderList(oldPaper);
-            initReaderList(newPaper);
+            oldPaper.setReaders(newPaper.getReaders());
+            initReaderList(oldPaper);
         }
 
         /*
+         * Updating the dataset list.
          * If the newly added paper has a dataset list, the dataset list of the paper with the same id is cleared.
          * The new dataset list is initialized.
          */
         if (newPaper.getDatasets() != null && newPaper.getDatasets().size() > 0) {
             cleanDatasetList(oldPaper);
-            initDatasetList(newPaper);
+            oldPaper.setDatasets(newPaper.getDatasets());
+            initDatasetList(oldPaper);
         }
 
-        paperRepository.save(newPaper);
+        paperRepository.save(oldPaper);
 
     }
 
@@ -172,6 +203,19 @@ public class PaperService {
     }
 
     /*
+     * The relationship between the paper and the paper it is related with is broken.
+     * But the the paper it is related with is not deleted from the database, only the relationship is deleted.
+     */
+    public void cleanRelatedWorkList(Paper paper) {
+        List<Paper> relatedWorks = paper.getRelatedWorks();
+
+        for (Paper relatedWork : relatedWorks) {
+            deleteRelatedWithRelationShip(paper.getPaperId(), relatedWork.getPaperId());
+        }
+
+    }
+
+    /*
      * The relationship between paper and library is broken.
      * But the library is not deleted from the database, only the relationship is deleted.
      */
@@ -208,6 +252,13 @@ public class PaperService {
             preprocessingRepository.deleteById(preprocessing.getId());
         }
 
+    }
+
+    /*
+     * The relationship between the paper and the paper it is related with has been deleted from the database.
+     */
+    public void deleteRelatedWithRelationShip(String paperId, String relatedWithPaperId) {
+        paperRepository.deleteRelatedWithRelationship(paperId, relatedWithPaperId);
     }
 
     /*

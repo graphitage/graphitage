@@ -5,6 +5,9 @@ import com.example.demo.Model.Library;
 import com.example.demo.Model.Paper;
 import com.example.demo.Model.Reader;
 import com.example.demo.Service.PaperService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Marker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,7 +22,7 @@ import java.util.Optional;
 public class PaperController {
 
     private final PaperService paperService;
-
+    Logger logger = LoggerFactory.getLogger(PaperController.class);
 
     @Autowired
     public PaperController(PaperService paperService) {
@@ -71,7 +74,7 @@ public class PaperController {
         }
         else
         {
-            paperService.updatePaper(newPaper);
+            logger.warn("[PAPER CONTROLLER - ADD PAPER] Paper with id " + newPaper.getPaperId() + " already exists in the database.");
         }
     }
 
@@ -83,13 +86,13 @@ public class PaperController {
     @PutMapping
     public void updatePaper(@RequestBody Paper updatedPaper) {
         boolean isExists = paperService.existsPaperById(updatedPaper.getPaperId());
-        if ( !isExists )
+        if ( isExists )
         {
-            paperService.savePaper(updatedPaper);
+            paperService.updatePaper(updatedPaper);
         }
         else
         {
-            paperService.updatePaper(updatedPaper);
+            logger.warn("[PAPER CONTROLLER - UPDATE PAPER] Paper with id " + updatedPaper.getPaperId() + " requested to be updated does not exist in the database.");
         }
     }
 

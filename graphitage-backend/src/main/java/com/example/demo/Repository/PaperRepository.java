@@ -25,6 +25,9 @@ public interface PaperRepository extends Neo4jRepository<Paper, String>{
 
     void deleteById(String paperId);
 
+    @Query("MATCH (p:Paper)-[r:RELATED_WITH]->(n:Paper) WHERE p.paperId = $0 AND n.paperId = $1 delete r")
+    void deleteRelatedWithRelationship(String paperId, String relatedWithPaperId);
+
     @Query("MATCH (p:Paper)-[r:HAS_LIBRARY]->(n:Library) WHERE p.paperId = $0 AND ID(n) = $1 delete r")
     void deleteLibraryRelationship(String paperId, Long libraryId);
 
@@ -37,14 +40,14 @@ public interface PaperRepository extends Neo4jRepository<Paper, String>{
     @Query("MATCH (p:Paper)-[r:PREPROCESSING]-(n) WHERE p.paperId = $0 RETURN n")
     List<Dataset> findDatasetsById(String paperId);
 
+    @Query("MATCH (p:Paper)-[r:RELATED_WITH]-(n) WHERE p.paperId = $0 RETURN n")
+    List<Paper> getRelatedWorksByID(String paperId);
+
     @Query("MATCH (p:Paper)-[r:HAS_LIBRARY]-(n) WHERE p.paperId = $0 RETURN n")
     List<Library> getLibrariesById(String paperId);
 
     @Query("MATCH (p:Paper)-[r:HAS_READER]-(n) WHERE p.paperId = $0 RETURN n")
     List<Reader> getReadersById(String paperId);
-
-    @Query("MATCH (p:Paper)-[r:RELATED_WITH]-(n) WHERE p.paperId = $0 RETURN n")
-    List<Paper> getRelatedWorksByID(String paperId);
 
     @Query("MATCH (p:Paper)-[r:RELATED_WITH]-(n) WHERE p.keywords n.keywords RETURN n")
     List<Paper> getRelatedPapersByKeyword(String paperId);
