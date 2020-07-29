@@ -8,6 +8,8 @@ import com.example.demo.Repository.PreprocessingRepository;
 import com.example.demo.Repository.ReaderRepository;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -29,9 +31,10 @@ public class PaperService {
     private final ReaderRepository readerRepository;
     private final LibraryRepository libraryRepository;
     private final PreprocessingRepository preprocessingRepository;
+    Logger logger = LoggerFactory.getLogger(LibraryService.class);
 
     @Autowired
-    public PaperService(@Qualifier("paperDAO") PaperRepository paperRepository, @Qualifier("readerDAO") ReaderRepository readerRepository, LibraryRepository libraryRepository, PreprocessingRepository preprocessingRepository) {
+    public PaperService(@Qualifier("paperDAO") PaperRepository paperRepository, @Qualifier("readerDAO") ReaderRepository readerRepository,@Qualifier("libraryDAO") LibraryRepository libraryRepository,@Qualifier("preprocessingDAO") PreprocessingRepository preprocessingRepository) {
         this.paperRepository = paperRepository;
         this.readerRepository = readerRepository;
         this.libraryRepository = libraryRepository;
@@ -254,11 +257,38 @@ public class PaperService {
 
     }
 
+    public void addRelatedWithRelationShip(String paperId, String relatedWorkPaperId) {
+        Optional<Paper> paper = paperRepository.findById(paperId);
+        if (paper.isPresent()) {
+
+            Optional<Paper> relatedWorkPaper = paperRepository.findById(relatedWorkPaperId);
+            if (relatedWorkPaper.isPresent()) {
+
+                List<Paper> relatedWorkPapers = paper.get().getRelatedWorks();
+                if (!relatedWorkPapers.contains(relatedWorkPaper.get())) {
+
+                    relatedWorkPapers.add(relatedWorkPaper.get());
+                    paper.get().setRelatedWorks(relatedWorkPapers);
+                    paperRepository.save(paper.get());
+
+                } else {
+                    logger.warn("[PAPER SERVICE - ADD RELATED WITH RELATIONSHIP] The relationship between paper with id " + paperId + " and paper with id " + relatedWorkPaperId + " already exists in the database.");
+                }
+
+            } else {
+                logger.warn("[PAPER SERVICE - ADD RELATED WITH RELATIONSHIP] Paper with id " + relatedWorkPaperId + " does not exists in the database.");
+            }
+
+        } else {
+            logger.warn("[PAPER SERVICE - ADD RELATED WITH RELATIONSHIP] Paper with id " + paperId + " does not exists in the database.");
+        }
+    }
+
     /*
      * The relationship between the paper and the paper it is related with has been deleted from the database.
      */
-    public void deleteRelatedWithRelationShip(String paperId, String relatedWithPaperId) {
-        paperRepository.deleteRelatedWithRelationship(paperId, relatedWithPaperId);
+    public void deleteRelatedWithRelationShip(String paperId, String relatedWorkPaperId) {
+        paperRepository.deleteRelatedWithRelationship(paperId, relatedWorkPaperId);
     }
 
     /*
@@ -514,4 +544,5 @@ public class PaperService {
         return paper;
 
     }
+
 }

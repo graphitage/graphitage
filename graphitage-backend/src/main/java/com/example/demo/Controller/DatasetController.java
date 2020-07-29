@@ -39,4 +39,14 @@ public class DatasetController {
     public void deleteDatasetById(@PathVariable("datasetId") Long datasetId){
         datasetService.deleteDatasetById(datasetId);
     }
+
+    @DeleteMapping(path = "{datasetId}/deleteDatasetRelationShip/{paperId}")
+    public void deleteDatasetRelationShip(@PathVariable("datasetId") Long datasetId, @PathVariable("paperId") String paperId) {
+        datasetService.deleteDatasetRelationShip(datasetId, paperId);
+    }
+
+    @PostMapping(path = "{datasetId}/addDatasetRelationShip/{paperId}")
+    public void addDatasetRelationShip(@PathVariable("datasetId") Long datasetId, @PathVariable("paperId") String paperId) {
+        datasetService.addDatasetRelationShip(datasetId, paperId);
+    }
 }
