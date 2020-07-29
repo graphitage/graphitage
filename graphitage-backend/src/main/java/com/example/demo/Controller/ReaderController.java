@@ -26,12 +26,22 @@ public class ReaderController {
     }
 
     @GetMapping("{readerId}/papers")
-    public List<Paper> getPapersByReaderId(Long readerId){
+    public List<Paper> getPapersByReaderId(@PathVariable("readerId") Long readerId){
         return readerService.getPapersByReaderId(readerId);
     }
 
     @DeleteMapping("{readerId}")
     public void deleteReaderById(@PathVariable("readerId") Long readerId){
         readerService.deleteReaderById(readerId);
+    }
+
+    @DeleteMapping(path = "{readerId}/deleteReaderRelationShip/{paperId}")
+    public void deleteReaderRelationShip(@PathVariable("readerId") Long readerId, @PathVariable("paperId") String paperId) {
+        readerService.deleteReaderRelationShip(readerId, paperId);
+    }
+
+    @PostMapping(path = "{readerId}/addReaderRelationShip/{paperId}")
+    public void addReaderRelationShip(@PathVariable("readerId") Long readerId, @PathVariable("paperId") String paperId) {
+        readerService.addReaderRelationShip(readerId, paperId);
     }
 }

@@ -72,6 +72,11 @@ public class Paper extends PaperDetails implements Comparable<Paper> {
         super();
     }
 
+    public Paper(String paperId) {
+        super();
+        this.paperId = paperId;
+    }
+
     public Paper(String paperId, String paperIdType, String title, Date publishDate, List<String> keywords, String abstractOfPaper, List<String> targets, List<String> problems, List<String> summaries, List<String> components, List<String> applicationDomains, List<String> highlights, List<String> contributions, List<String> cons, List<String> pros, List<String> futureWorks, List<String> evaluationMetrics, String linkOfPaper, String authors, List<String> constraints, List<String> notes, List<String> comments) {
         super(abstractOfPaper, targets, problems, summaries, components, applicationDomains,
                 highlights, contributions, cons, pros, futureWorks, evaluationMetrics,

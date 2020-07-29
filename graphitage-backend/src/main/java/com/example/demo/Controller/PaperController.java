@@ -110,6 +110,16 @@ public class PaperController {
         return paperService.paperSearchWithOR(title, publishDate, readerName, keyword, dataset, libraryName);
     }
 
+    @DeleteMapping(path = "{paperId}/deleteRelatedWithRelationShip/{relatedWorkPaperId}")
+    public void deleteRelatedWithRelationShip(@PathVariable("paperId") String paperId, @PathVariable("relatedWorkPaperId") String relatedWorkPaperId) {
+        paperService.deleteRelatedWithRelationShip(paperId, relatedWorkPaperId);
+    }
+
+    @PostMapping(path = "{paperId}/addRelatedWithRelationShip/{relatedWorkPaperId}")
+    public void addRelatedWithRelationShip(@PathVariable("paperId") String paperId, @PathVariable("relatedWorkPaperId") String relatedWorkPaperId) {
+        paperService.addRelatedWithRelationShip(paperId, relatedWorkPaperId);
+    }
+
     @GetMapping("{paperId}/relatedPaperWithKeyword")
     public List<Paper> getRelatedPapersWithKeyword(String paperId){
         return paperService.getRelatedPapersWithKeyword(paperId);

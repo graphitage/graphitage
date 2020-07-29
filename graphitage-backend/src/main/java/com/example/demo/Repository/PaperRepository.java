@@ -26,7 +26,7 @@ public interface PaperRepository extends Neo4jRepository<Paper, String>{
     void deleteById(String paperId);
 
     @Query("MATCH (p:Paper)-[r:RELATED_WITH]->(n:Paper) WHERE p.paperId = $0 AND n.paperId = $1 delete r")
-    void deleteRelatedWithRelationship(String paperId, String relatedWithPaperId);
+    void deleteRelatedWithRelationship(String paperId, String relatedWorkPaperId);
 
     @Query("MATCH (p:Paper)-[r:HAS_LIBRARY]->(n:Library) WHERE p.paperId = $0 AND ID(n) = $1 delete r")
     void deleteLibraryRelationship(String paperId, Long libraryId);

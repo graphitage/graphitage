@@ -36,11 +36,11 @@ public class Dataset {
     @Getter @Setter
     @JsonIgnoreProperties({"datasets", "dataset"})
     @JsonProperty("papers")
-    @Relationship("PREPROCESSING")
+    @Relationship(value = "PREPROCESSING", direction = INCOMING)
     private List<Preprocessing> papers = new ArrayList<>();
 
     @Getter @Setter
-    @Relationship(value = "SIZE_INFO", direction = OUTGOING)
+    @Relationship(value = "SIZE_INFO")
     @JsonIgnoreProperties("datasets")
     @JsonProperty("sizeInfo")
     private List<DatasetSizeInfo> sizeInfo = new ArrayList<>();
