@@ -2,10 +2,7 @@ package com.example.demo.Service;
 
 
 import com.example.demo.Model.*;
-import com.example.demo.Repository.LibraryRepository;
-import com.example.demo.Repository.PaperRepository;
-import com.example.demo.Repository.PreprocessingRepository;
-import com.example.demo.Repository.ReaderRepository;
+import com.example.demo.Repository.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -31,14 +28,20 @@ public class PaperService {
     private final ReaderRepository readerRepository;
     private final LibraryRepository libraryRepository;
     private final PreprocessingRepository preprocessingRepository;
+    private final DatasetRepository datasetRepository;
     Logger logger = LoggerFactory.getLogger(LibraryService.class);
 
     @Autowired
-    public PaperService(@Qualifier("paperDAO") PaperRepository paperRepository, @Qualifier("readerDAO") ReaderRepository readerRepository,@Qualifier("libraryDAO") LibraryRepository libraryRepository,@Qualifier("preprocessingDAO") PreprocessingRepository preprocessingRepository) {
+    public PaperService(@Qualifier("paperDAO") PaperRepository paperRepository,
+                        @Qualifier("readerDAO") ReaderRepository readerRepository,
+                        @Qualifier("libraryDAO") LibraryRepository libraryRepository,
+                        @Qualifier("preprocessingDAO") PreprocessingRepository preprocessingRepository,
+                        @Qualifier("datasetDAO") DatasetRepository datasetRepository){
         this.paperRepository = paperRepository;
         this.readerRepository = readerRepository;
         this.libraryRepository = libraryRepository;
         this.preprocessingRepository = preprocessingRepository;
+        this.datasetRepository = datasetRepository;
     }
 
     private void paperIntersection(List<Paper> paperList1, List<Paper> paperList2) {
@@ -201,6 +204,12 @@ public class PaperService {
          */
         List<Preprocessing> preProcList = paper.getDatasets();
         for (Preprocessing preproc : preProcList) {
+            /* Checking if there is a dataset with the same name. If there is a dataset with the same name, no new dataset is created. */
+            Optional<Dataset> tempDataset = datasetRepository.findByName(preproc.getDataset().getDatasetName());
+            /* If there is a dataset with the same name, the id of the dataset is assigned the old dataset id. */
+            if (tempDataset.isPresent()) {
+                preproc.getDataset().setDatasetId(tempDataset.get().getDatasetId());
+            }
             preproc.setPaper(paper);
         }
     }

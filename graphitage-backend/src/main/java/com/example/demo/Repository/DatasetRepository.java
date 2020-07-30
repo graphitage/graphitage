@@ -21,4 +21,7 @@ public interface DatasetRepository extends Neo4jRepository<Dataset, Long> {
 
     @Query("MATCH (p:Paper)-[r]->(d:Dataset) WHERE d.datasetId = $0 return p")
     List<Paper> getPapersByDatasetId(Long datasetId);
+
+    @Query("MATCH (d:Dataset) WHERE toLower(d.datasetName) = toLower($0) RETURN d")
+    Optional<Dataset> findByName(String datasetName);
 }

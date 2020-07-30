@@ -18,9 +18,11 @@ import static org.neo4j.ogm.annotation.Relationship.OUTGOING;
 public class Dataset {
 
     @Id
+    @GeneratedValue
+    @Setter
     @Getter
     @Property("datasetId")
-    @JsonProperty("datasetId")
+    @JsonProperty(value = "datasetId", access = JsonProperty.Access.READ_ONLY)
     private Long datasetId;
 
     @Getter @Setter
@@ -35,7 +37,7 @@ public class Dataset {
 
     @Getter @Setter
     @JsonIgnoreProperties({"datasets", "dataset"})
-    @JsonProperty("papers")
+    @JsonProperty(value = "papers", access = JsonProperty.Access.WRITE_ONLY)
     @Relationship(value = "PREPROCESSING", direction = INCOMING)
     private List<Preprocessing> papers = new ArrayList<>();
 
