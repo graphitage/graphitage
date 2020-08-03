@@ -532,7 +532,7 @@ public class PaperService {
                 referencesId = (String) tempJson.get("doi");
             } else if (!tempJson.isNull("arxivId")) {
                 referencesType = "arXiv";
-                referencesId = (String) tempJson.get("arXiv");
+                referencesId = (String) tempJson.get("arxivId");
             } else {
                 referencesType = "S2";
                 referencesId = (String) tempJson.get("paperId");
@@ -545,7 +545,7 @@ public class PaperService {
             paperId = (String) paperJson.get("doi");
         } else if (!paperJson.isNull("arxivId")) {
             paperIdType = "arXiv";
-            paperId = (String) paperJson.get("arXiv");
+            paperId = (String) paperJson.get("arxivId");
         }
 
         Paper paper = new Paper(paperId, paperIdType, authors.toString(), keywords, title, abstractOfJ, url, date);
