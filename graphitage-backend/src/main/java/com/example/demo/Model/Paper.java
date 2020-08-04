@@ -66,6 +66,11 @@ public class Paper extends PaperDetails implements Comparable<Paper> {
     @JsonIgnoreProperties({"papers"})
     private List<Reader> readers = new ArrayList<>();
 
+    @Getter @Setter
+    @JsonProperty("references")
+    @Transient
+    private List<Paper> references = new ArrayList<>();
+
 
     public Paper() {
         super();

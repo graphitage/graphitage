@@ -106,6 +106,7 @@ public class PaperService {
         withoutProperties.add("Datasets");
         withoutProperties.add("RelatedWorks");
         withoutProperties.add("Class");
+        withoutProperties.add("References");
 
         /* The non-null properties of the new Paper are updated on the old paper. */
         oldPaper.merge(newPaper, withoutProperties);
@@ -549,7 +550,7 @@ public class PaperService {
         }
 
         Paper paper = new Paper(paperId, paperIdType, authors, keywords, title, abstractOfJ, url, date);
-        paper.setRelatedWorks(references);
+        paper.setReferences(references);
         return paper;
 
     }
