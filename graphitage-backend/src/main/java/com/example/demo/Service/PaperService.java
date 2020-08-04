@@ -36,7 +36,7 @@ public class PaperService {
                         @Qualifier("readerDAO") ReaderRepository readerRepository,
                         @Qualifier("libraryDAO") LibraryRepository libraryRepository,
                         @Qualifier("preprocessingDAO") PreprocessingRepository preprocessingRepository,
-                        @Qualifier("datasetDAO") DatasetRepository datasetRepository){
+                        @Qualifier("datasetDAO") DatasetRepository datasetRepository) {
         this.paperRepository = paperRepository;
         this.readerRepository = readerRepository;
         this.libraryRepository = libraryRepository;
@@ -99,13 +99,14 @@ public class PaperService {
          * The properties that will not be updated with setter and getter functions are determined..
          * Since library, reader, dataset and relatedWork lists are kept in nodes, they are not updated with setter and getter functions.
          * Relations should be deleted and new relationships should be created.
-        */
+         */
         List<String> withoutProperties = new ArrayList<>();
         withoutProperties.add("Libraries");
         withoutProperties.add("Readers");
         withoutProperties.add("Datasets");
         withoutProperties.add("RelatedWorks");
         withoutProperties.add("Class");
+        withoutProperties.add("References");
 
         /* The non-null properties of the new Paper are updated on the old paper. */
         oldPaper.merge(newPaper, withoutProperties);
@@ -115,7 +116,7 @@ public class PaperService {
          * If the newly added paper has a relatedWork list, the relatedWork list of the paper with the same id is cleared.
          * The new relatedWork list is set.
          */
-        if ( newPaper.getRelatedWorks() != null && newPaper.getRelatedWorks().size() > 0 ) {
+        if (newPaper.getRelatedWorks() != null && newPaper.getRelatedWorks().size() > 0) {
             cleanRelatedWorkList(oldPaper);
             oldPaper.setRelatedWorks(newPaper.getRelatedWorks());
         }
@@ -493,19 +494,19 @@ public class PaperService {
         String url = (String) paperJson.get("url");
 
         Date date = null;
-        if(!paperJson.isNull("year")){
+        if (!paperJson.isNull("year")) {
             String year = String.valueOf(paperJson.get("year"));
             date = new SimpleDateFormat("yyyy").parse(year);
         }
 
 
-        //List<String> authors=new ArrayList<>();
+        List<String> authors = new ArrayList<>();
         JSONArray authorsJ = (JSONArray) paperJson.get("authors");
-        StringBuilder authors = new StringBuilder();
+//        StringBuilder authors = new StringBuilder();
         for (int i = 0; i < authorsJ.length(); i++) {
             tempJson = (JSONObject) authorsJ.get(i);
-            //authors.add((String)jo.get("name"));
-            authors.append((String) tempJson.get("name")).append(",");
+            authors.add((String) tempJson.get("name"));
+//            authors.append((String) tempJson.get("name")).append(",");
         }
 
         // Use fieldOfStudy and topics as keywords of the paper
@@ -532,7 +533,7 @@ public class PaperService {
                 referencesId = (String) tempJson.get("doi");
             } else if (!tempJson.isNull("arxivId")) {
                 referencesType = "arXiv";
-                referencesId = (String) tempJson.get("arXiv");
+                referencesId = (String) tempJson.get("arxivId");
             } else {
                 referencesType = "S2";
                 referencesId = (String) tempJson.get("paperId");
@@ -545,11 +546,11 @@ public class PaperService {
             paperId = (String) paperJson.get("doi");
         } else if (!paperJson.isNull("arxivId")) {
             paperIdType = "arXiv";
-            paperId = (String) paperJson.get("arXiv");
+            paperId = (String) paperJson.get("arxivId");
         }
 
-        Paper paper = new Paper(paperId, paperIdType, authors.toString(), keywords, title, abstractOfJ, url, date);
-        paper.setRelatedWorks(references);
+        Paper paper = new Paper(paperId, paperIdType, authors, keywords, title, abstractOfJ, url, date);
+        paper.setReferences(references);
         return paper;
 
     }

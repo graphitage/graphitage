@@ -1,6 +1,7 @@
 package com.example.demo.Service;
 
 import com.example.demo.Model.Dataset;
+import com.example.demo.Model.Library;
 import com.example.demo.Model.Paper;
 import com.example.demo.Model.Preprocessing;
 import com.example.demo.Repository.DatasetRepository;
@@ -11,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,7 +40,16 @@ public class DatasetService {
     }
 
     public List<Paper> getPapersByDatasetId(Long datasetId) {
-        return datasetRepository.getPapersByDatasetId(datasetId);
+
+            Optional<Dataset> datasetOptional = datasetRepository.findById(datasetId);
+            List<Paper> paperList = new ArrayList<>();
+            if (datasetOptional.isPresent()) {
+                List<Preprocessing> preprocessingList = datasetOptional.get().getPapers();
+                for(Preprocessing preprocessing: preprocessingList){
+                    paperList.add(preprocessing.getPaper());
+                }
+            }
+            return paperList;
     }
 
     public void deleteDatasetById(Long datasetId) {

@@ -6,7 +6,6 @@ import lombok.Setter;
 import org.neo4j.ogm.annotation.*;
 
 import java.lang.reflect.Method;
-import java.security.cert.PKIXParameters;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -44,7 +43,7 @@ public class Paper extends PaperDetails implements Comparable<Paper> {
     private String linkOfPaper;
 
     @Property("authors")
-    private String authors;
+    private List<String> authors;
 
     @JsonIgnoreProperties({"papers", "paper"})
     @Relationship(type = "PREPROCESSING")
@@ -67,6 +66,11 @@ public class Paper extends PaperDetails implements Comparable<Paper> {
     @JsonIgnoreProperties({"papers"})
     private List<Reader> readers = new ArrayList<>();
 
+    @Getter @Setter
+    @JsonProperty("references")
+    @Transient
+    private List<Paper> references = new ArrayList<>();
+
 
     public Paper() {
         super();
@@ -77,7 +81,7 @@ public class Paper extends PaperDetails implements Comparable<Paper> {
         this.paperId = paperId;
     }
 
-    public Paper(String paperId, String paperIdType, String title, Date publishDate, List<String> keywords, String abstractOfPaper, List<String> targets, List<String> problems, List<String> summaries, List<String> components, List<String> applicationDomains, List<String> highlights, List<String> contributions, List<String> cons, List<String> pros, List<String> futureWorks, List<String> evaluationMetrics, String linkOfPaper, String authors, List<String> constraints, List<String> notes, List<String> comments) {
+    public Paper(String paperId, String paperIdType, String title, Date publishDate, List<String> keywords, String abstractOfPaper, List<String> targets, List<String> problems, List<String> summaries, List<String> components, List<String> applicationDomains, List<String> highlights, List<String> contributions, List<String> cons, List<String> pros, List<String> futureWorks, List<String> evaluationMetrics, String linkOfPaper, List<String> authors, List<String> constraints, List<String> notes, List<String> comments) {
         super(abstractOfPaper, targets, problems, summaries, components, applicationDomains,
                 highlights, contributions, cons, pros, futureWorks, evaluationMetrics,
                 constraints, notes, comments);
@@ -90,7 +94,7 @@ public class Paper extends PaperDetails implements Comparable<Paper> {
         this.authors = authors;
     }
 
-    public Paper(String paperId, String paperIdType, String authors, List<String> keywords,
+    public Paper(String paperId, String paperIdType, List<String> authors, List<String> keywords,
                  String title, String abstractOfPaper, String linkOfPaper, Date publishDate) {//semantic icin
         super.setAbstractOfPaper(abstractOfPaper);
         this.paperId = paperId;
