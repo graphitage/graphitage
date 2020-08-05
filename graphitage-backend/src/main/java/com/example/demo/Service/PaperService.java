@@ -65,8 +65,15 @@ public class PaperService {
         return this.paperRepository.findAll();
     }
 
-    public Optional<Paper> getPaperInfoById(String paperId) {
-        return paperRepository.findById(paperId);
+    public Paper getPaperInfoById(String paperId) {
+        
+        Optional<Paper> paper = paperRepository.findById(paperId);
+        if ( paper.isPresent() ) {
+            return paper.get();
+        }
+        else {
+            return new Paper();
+        }
     }
 
     public boolean existsPaperById(String paperId) {
@@ -548,6 +555,9 @@ public class PaperService {
             paperIdType = "arXiv";
             paperId = (String) paperJson.get("arxivId");
         }
+
+        /* Replace '/' character to '-' character */
+        paperId = paperId.replace("/", "-");
 
         Paper paper = new Paper(paperId, paperIdType, authors, keywords, title, abstractOfJ, url, date);
         paper.setReferences(references);

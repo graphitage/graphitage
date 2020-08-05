@@ -36,7 +36,7 @@ public class PaperController {
     }
 
     @GetMapping(path = "/{paperId}")
-    public Optional<Paper> getPaperInfoById(@PathVariable("paperId") String paperId) {
+    public Paper getPaperInfoById(@PathVariable("paperId") String paperId) {
         return paperService.getPaperInfoById(paperId);
     }
 
