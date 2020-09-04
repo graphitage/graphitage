@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api.graphitage.com/libraries")
 public class LibraryController {
@@ -28,14 +28,24 @@ public class LibraryController {
     }
 
     @GetMapping("{libraryId}/papers")
-    public List<Paper> getPapersByLibraryId(Long libraryId){
+    public List<Paper> getPapersByLibraryId(@PathVariable("libraryId") Long libraryId){
         return libraryService.getPapersByLibraryId(libraryId);
     }
 
-    @DeleteMapping
-    public void deleteLibraryById(Long libraryId){
+    @DeleteMapping(path = "{libraryId}")
+    public void deleteLibraryById(@PathVariable("libraryId") Long libraryId){
         libraryService.deleteLibraryById(libraryId);
 
+    }
+
+    @DeleteMapping(path = "{libraryId}/deleteLibraryRelationShip/{paperId}")
+    public void deleteLibraryRelationShip(@PathVariable("libraryId") Long libraryId, @PathVariable("paperId") String paperId) {
+        libraryService.deleteLibraryRelationShip(libraryId, paperId);
+    }
+
+    @PostMapping(path = "{libraryId}/addLibraryRelationShip/{paperId}")
+    public void addLibraryRelationShip(@PathVariable("libraryId") Long libraryId, @PathVariable("paperId") String paperId) {
+        libraryService.addLibraryRelationShip(libraryId, paperId);
     }
 
 }

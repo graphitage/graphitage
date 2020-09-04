@@ -19,15 +19,29 @@ public interface PaperRepository extends Neo4jRepository<Paper, String>{
 
     Optional<Paper> findById(String paperID);
 
+    boolean existsById(String paperId);
+
     Paper save(Paper paper); // it adds a paper to database
 
     void deleteById(String paperId);
 
+    @Query("MATCH (p:Paper)-[r:RELATED_WITH]->(n:Paper) WHERE p.paperId = $0 AND n.paperId = $1 delete r")
+    void deleteRelatedWithRelationship(String paperId, String relatedWorkPaperId);
+
+    @Query("MATCH (p:Paper)-[r:HAS_LIBRARY]->(n:Library) WHERE p.paperId = $0 AND ID(n) = $1 delete r")
+    void deleteLibraryRelationship(String paperId, Long libraryId);
+
+    @Query("MATCH (p:Paper)-[r:HAS_READER]->(n:Reader) WHERE p.paperId = $0 AND ID(n) = $1 delete r")
+    void deleteReaderRelationship(String paperId, Long readerId);
+
     @Query("MATCH (p:Paper) WHERE p.paperId = $0 RETURN p.keywords")
     List<String> findKeywordsById(String paperId);
 
-    @Query("MATCH (p:Paper)-[r:HAS_DATASET]-(n) WHERE p.paperId = $0 RETURN n")
+    @Query("MATCH (p:Paper)-[r:PREPROCESSING]-(n) WHERE p.paperId = $0 RETURN n")
     List<Dataset> findDatasetsById(String paperId);
+
+    @Query("MATCH (p:Paper)-[r:RELATED_WITH]-(n) WHERE p.paperId = $0 RETURN n")
+    List<Paper> getRelatedWorksByID(String paperId);
 
     @Query("MATCH (p:Paper)-[r:HAS_LIBRARY]-(n) WHERE p.paperId = $0 RETURN n")
     List<Library> getLibrariesById(String paperId);
@@ -35,12 +49,8 @@ public interface PaperRepository extends Neo4jRepository<Paper, String>{
     @Query("MATCH (p:Paper)-[r:HAS_READER]-(n) WHERE p.paperId = $0 RETURN n")
     List<Reader> getReadersById(String paperId);
 
-    @Query("MATCH (p:Paper)-[r:RELATED_WITH]-(n) WHERE p.paperId = $0 RETURN n")
-    List<Paper> getRelatedWorksByID(String paperId);
-
     @Query("MATCH (p:Paper)-[r:RELATED_WITH]-(n) WHERE p.keywords n.keywords RETURN n")
     List<Paper> getRelatedPapersByKeyword(String paperId);
-
 
     @Query("MATCH (p:Paper) WHERE toLower(p.title) CONTAINS toLower($0) return p")
     List<Paper> paperSearchWithTitle(String title);
@@ -54,7 +64,7 @@ public interface PaperRepository extends Neo4jRepository<Paper, String>{
     @Query("MATCH (p:Paper)-[r:HAS_READER]->(n) WHERE n.readerName = $0 return p")
     List<Paper> paperSearchWithReaderName(String readerName);
 
-    @Query("MATCH (p:Paper)-[r:HAS_DATASET]->(n) WHERE n.datasetName = $0 return p")
+    @Query("MATCH (p:Paper)-[r:PREPROCESSING]->(n) WHERE n.datasetName = $0 return p")
     List<Paper> paperSearchWithDatasetName(String datasetName);
 
     @Query("MATCH (p:Paper)-[r:HAS_LIBRARY]->(n) WHERE n.libraryName = $0 return p")

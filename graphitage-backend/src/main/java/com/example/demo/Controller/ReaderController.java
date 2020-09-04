@@ -4,13 +4,11 @@ import com.example.demo.Model.Paper;
 import com.example.demo.Model.Reader;
 import com.example.demo.Service.ReaderService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api.graphitage.com/readers")
 public class ReaderController {
@@ -28,12 +26,22 @@ public class ReaderController {
     }
 
     @GetMapping("{readerId}/papers")
-    public List<Paper> getPapersByReaderId(Long readerId){
+    public List<Paper> getPapersByReaderId(@PathVariable("readerId") Long readerId){
         return readerService.getPapersByReaderId(readerId);
     }
 
-    @DeleteMapping
-    public void deleteReaderById(Long readerId){
+    @DeleteMapping("{readerId}")
+    public void deleteReaderById(@PathVariable("readerId") Long readerId){
         readerService.deleteReaderById(readerId);
+    }
+
+    @DeleteMapping(path = "{readerId}/deleteReaderRelationShip/{paperId}")
+    public void deleteReaderRelationShip(@PathVariable("readerId") Long readerId, @PathVariable("paperId") String paperId) {
+        readerService.deleteReaderRelationShip(readerId, paperId);
+    }
+
+    @PostMapping(path = "{readerId}/addReaderRelationShip/{paperId}")
+    public void addReaderRelationShip(@PathVariable("readerId") Long readerId, @PathVariable("paperId") String paperId) {
+        readerService.addReaderRelationShip(readerId, paperId);
     }
 }

@@ -16,3 +16,11 @@ them with others.
 Graphitage, a problem solver for all the professionals among many profession groups,
 allows you to easily analyze big data and see the relationships between 
 them.
+
+Watch the video:
+
+[![Graphitege](http://img.youtube.com/vi/5tmKs3dHoWU/0.jpg)](http://www.youtube.com/watch?v=5tmKs3dHoWU "Graphitage")
+
+For the longer demo:
+
+[![Graphitage Demo](http://img.youtube.com/vi/I8sdFAybmvI/0.jpg)](http://www.youtube.com/watch?v=I8sdFAybmvI "Graphitage Demo")
