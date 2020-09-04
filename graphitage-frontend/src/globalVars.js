@@ -1,0 +1,1 @@
+export const url = "https://graphitage.herokuapp.com/api.graphitage.com/";
