@@ -1,19 +1,30 @@
 export {
-    fetchDetails
+    fetchDetails,
+    clearDetails,
+    fetchPreprocessing
 } from './details';
 
 export {
     clearNodes,
     simpleExpand,
+    setUnExpand,
     addElements,
     expandByDatasets,
     expandByReaders,
     expandByKeywords,
-    expandByLibraries
+    expandByLibraries,
+    setToHideNodeId,
+    expandReaderByPapers,
+    expandLibraryByPapers,
+    expandDatasetByPapers
 } from './graph';
 
 
 export {
     openContextMenu,
-    closeContextMenu
+    closeContextMenu,
+    openErrorModal,
+    closeErrorModal,
+    openLoadingScreen,
+    closeLoadingScreen
 } from './ui';

@@ -1,88 +1,119 @@
-import React, { useState, useCallback } from 'react';
-import { connect } from 'react-redux';
+import React, { useState, useCallback } from "react";
+import { connect } from "react-redux";
 
-import SearchMenu from '../../components/Navigation/SearchMenu/SearchMenu';
-import Toolbar from '../../components/Navigation/Toolbar/Toolbar';
-import DetailsPanel from '../../components/DetailsPanel/DetailsPanel';
+import SearchMenu from "../../containers/SearchMenu/SearchMenu";
+import Toolbar from "../../components/Navigation/Toolbar/Toolbar";
+import DetailsPanel from "../../components/DetailsPanel/DetailsPanel";
+import OptionsMenu from "../../containers/OptionsMenu/OptionsMenu";
+import ErrorModal from "../../components/ErrorModal/ErrorModal";
+import LoadingScreen from "../../components/LoadingScreen/LoadingScreen";
 
+import * as actionTypes from "../../store/actions/actionTypes";
 
-import classes from './Layout.module.css'
-import OptionsMenu from '../../components/OptionsMenu/OptionsMenu';
+import * as actionCreators from "../../store/actions/index";
 
-import * as actionTypes from '../../store/actions/actionTypes';
-
+const styles = {
+  content: { height: "calc(100% - 60px)" },
+};
 
 const Layout = (props) => {
-    const [searchMenu, setSearch] = useState(false);
-    const [optionsMenu, setOptions] = useState(false);
-    const [detailsMenu, setdetailsMenu] = useState(false);
-    const [nodeId, setNodeId] = useState('');
+  const [searchMenu, setSearch] = useState(false);
+  const [optionsMenu, setOptions] = useState(false);
+  const [detailsMenu, setdetailsMenu] = useState(false);
+  const [nodeId, setNodeId] = useState("");
+  const [detailOnEdit, setDetailOnEdit] = useState(false);
+  const [collapsedDetails, setCollapsedDetails] = useState(true);
 
-    const searchClosedHandler = useCallback(() => {
-        setSearch(false);
-    }, [])
+  const searchClosedHandler = useCallback(() => {
+    setSearch(false);
+  }, []);
 
+  const searchClickedHandler = useCallback(() => {
+    setSearch(true);
+    setOptions(false);
+    setdetailsMenu(false);
+  }, []);
 
+  const optionsClosedHandler = useCallback(() => {
+    setOptions(false);
+  }, []);
 
-    const searchClickedHandler = useCallback(() => {
-        setSearch(true);
-        setOptions(false);
-        setdetailsMenu(false);
-    }, []);
+  const optionsClickedHandler = useCallback(() => {
+    setOptions(true);
+    setSearch(false);
+    setdetailsMenu(false);
+  }, []);
 
-    const optionsClosedHandler = useCallback(() => {
-        setOptions(false);
-    }, []);
+  const { switchClearGraph } = props;
+  const clearGraph = useCallback(() => {
+    switchClearGraph(true);
+  }, [switchClearGraph]);
 
-    const optionsClickedHandler = useCallback(() => {
-        setOptions(true);
-        setSearch(false);
-        setdetailsMenu(false);
-    }, []);
+  const detailsPanelOpenedHandler = useCallback((id) => {
+    setdetailsMenu(true);
+    setOptions(false);
+    setSearch(false);
+    setNodeId(id);
+    setDetailOnEdit(false);
+  }, []);
 
-    const { switchClearGraph } = props;
-    const clearGraph = useCallback(() => {
-        switchClearGraph(true);
-    }, [switchClearGraph]);
+  const detailsPanelClosedHandler = useCallback(() => {
+    setdetailsMenu(false);
+    setDetailOnEdit(false);
+    // props.onClearDetails();
+  }, []);
 
-    const detailsPanelOpenedHandler = useCallback((id) => {
-        setdetailsMenu(true);
-        setOptions(false);
-        setSearch(false);
-        setNodeId(id);
-    }, []);
+  return (
+    <React.Fragment>
+      <SearchMenu
+        search={searchMenu}
+        searchClosed={searchClosedHandler}
+      ></SearchMenu>
+      <OptionsMenu
+        options={optionsMenu}
+        optionsClosed={optionsClosedHandler}
+        collapsedDetails={collapsedDetails}
+        setCollapsedDetails={setCollapsedDetails}
+      ></OptionsMenu>
+      <DetailsPanel
+        detailsClosed={detailsPanelClosedHandler}
+        details={detailsMenu}
+        nodeId={nodeId}
+        isEditing={detailOnEdit}
+        setEditing={setDetailOnEdit}
+      />
+      <Toolbar
+        searchClick={searchClickedHandler}
+        optionsClick={optionsClickedHandler}
+        clearGraph={clearGraph}
+      ></Toolbar>
+      <main style={styles.content}>
+        {React.cloneElement(props.children, {
+          detailsMenuHandler: detailsPanelOpenedHandler,
+        })}
+      </main>
+      {props.showError && <ErrorModal />}
+      {props.loading && <LoadingScreen />}
+    </React.Fragment>
+  );
+};
 
-    const detailsPanelClosedHandler = useCallback(() => {
-        setdetailsMenu(false);
-    }, []);
+const mapStateToProps = (state) => {
+  return {
+    clr: state.clearNodes,
+    showError: state.ui.errorModal.error,
+    loading: state.ui.loadingScreen.loading,
+    toHideNodeId: state.graph.toHideNodeId,
+  };
+};
 
+const mapDispatchToProps = (dispatch) => {
+  return {
+    switchClearGraph: (isActive) =>
+      dispatch({ type: actionTypes.CLEAR_NODES, bool: isActive }),
+    onSetToHideNodeId: (id) => dispatch(actionCreators.setToHideNodeId(id)),
+    onClearDetails: () => dispatch(actionCreators.clearDetails()),
+  };
+};
 
-
-
-    return (
-        <React.Fragment>
-            <SearchMenu search={searchMenu} searchClosed={searchClosedHandler}></SearchMenu>
-            <OptionsMenu options={optionsMenu} optionsClosed={optionsClosedHandler}></OptionsMenu>
-            <DetailsPanel detailsClosed={detailsPanelClosedHandler} details={detailsMenu} nodeId={nodeId} />
-            <Toolbar searchClick={searchClickedHandler} optionsClick={optionsClickedHandler} clearGraph={clearGraph}></Toolbar>
-            <main className={classes.Content}>
-                {React.cloneElement(props.children, { detailsMenuHandler: detailsPanelOpenedHandler })}
-            </main>
-        </React.Fragment>
-    );
-}
-
-
-const mapStateToProps = state => {
-    return {
-        clr: state.clearNodes
-    }
-}
-
-const mapDispatchToProps = dispatch => {
-    return {
-        switchClearGraph: (isActive) => dispatch({ type: actionTypes.CLEAR_NODES, bool: isActive })
-    }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(Layout); 
+export default connect(mapStateToProps, mapDispatchToProps)(Layout);
